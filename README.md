@@ -27,7 +27,7 @@
 
 /documents/upload: صفحة رفع مستند جديد
 
-/documents: عرض قائمة المستندات
+/documents: عرض الواجهة الترحيبية 
 
 /documents/search: بحث وترتيب المستندات
 
