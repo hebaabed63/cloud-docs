@@ -15,10 +15,8 @@ use App\Http\Controllers\DocumentController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
+
+Route::get('/', [DocumentController::class, 'index'])->name('documents.index');
 
 Route::get('/upload', [DocumentController::class, 'showUploadForm'])->name('upload.form');
 Route::post('/upload', [DocumentController::class, 'handleUpload'])->name('upload.handle');
