@@ -7,7 +7,7 @@
         <p style="color: green;">{{ session('success') }}</p>
     @endif
 
-  
+
 <form id="uploadForm" action="{{ route('upload.handle') }}" method="POST" enctype="multipart/form-data">
     @csrf
 <div class="upload-section card">

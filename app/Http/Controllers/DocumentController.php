@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Smalot\PdfParser\Parser as PdfParser;
 use PhpOffice\PhpWord\IOFactory;
 use App\Models\Document;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpWord\Element\Text;
 use DOMDocument;
@@ -32,8 +33,11 @@ class DocumentController extends Controller
 
         $file = $request->file('file');
 
+        $uploaded = Cloudinary::upload($file->getRealPath(), [
+        'folder' => 'documents'
+    ]);
 
-        $path = $file->store('public/documents');
+             $path = $uploaded->getSecurePath();
 
         $title = '';
         $content = '';
@@ -65,7 +69,7 @@ class DocumentController extends Controller
         }
 
         $document = new Document();
-        $document->filename=$file->getFilename();
+        $document->filename=$uploaded->getOriginalFilename();
         $document->title = $title ?? 'No Title';
         $document->file_path = $path;
         $document->content = $content ?? '';
