@@ -34,7 +34,7 @@ class DocumentController extends Controller
         $file = $request->file('file');
 
         $uploaded = Cloudinary::upload($file->getRealPath(), [
-        'folder' => 'documents'
+           'folder' => 'uploads',
     ]);
 
              $path = $uploaded->getSecurePath();
