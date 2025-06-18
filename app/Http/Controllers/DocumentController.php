@@ -18,9 +18,9 @@ use DOMDocument;
 
 class DocumentController extends Controller
 {
-    public function index(){
-      return view('home');
-
+    public function index()
+    {
+        return view('home');
     }
     public function showUploadForm()
     {
@@ -37,15 +37,14 @@ class DocumentController extends Controller
         $file = $request->file('file');
 
         $uploaded = Cloudinary::upload($file->getRealPath(), [
-           'resource_type' => 'auto',
+            'resource_type' => 'auto',
             'folder' => 'uploads'
-    ]);
+        ]);
 
-             $path = $uploaded->getSecurePath();
-             $uploadResult = $uploaded->getResult();
-            $size = $uploadResult['bytes'] ?? null;
-
-
+        $uploadResult = $uploaded->getArrayCopy();
+        $path = $uploadResult['secure_url'] ?? null;
+        $publicId = $uploadResult['public_id'] ?? null;
+        $size = $uploadResult['bytes'] ?? null;
         $title = '';
         $content = '';
 
@@ -68,19 +67,19 @@ class DocumentController extends Controller
                         $content .= $textNode->nodeValue . ' ';
                     }
 
-            $lines = preg_split('/[\r\n\.]+/', $content);
-            $firstLine = isset($lines[0]) ? trim($lines[0]) : 'بدون عنوان';
-            $title = \Illuminate\Support\Str::limit($firstLine, 100);
+                    $lines = preg_split('/[\r\n\.]+/', $content);
+                    $firstLine = isset($lines[0]) ? trim($lines[0]) : 'بدون عنوان';
+                    $title = \Illuminate\Support\Str::limit($firstLine, 100);
                 }
             }
         }
 
         $document = new Document();
-        $document->filename=$uploaded->getOriginalFilename();
+        $document->filename = $file->getClientOriginalName();
         $document->title = $title ?? 'No Title';
         $document->file_path = $path;
         $document->size = $size;
-        $document->public_id = $uploaded->getPublicId();
+        $document->public_id = $publicId;
         $document->content = $content ?? '';
         $document->category = null;
 
@@ -115,8 +114,6 @@ class DocumentController extends Controller
 
 
         return view('documents.search', compact('documents', 'sortOrder'));
-
-
     }
     public function highlight($id, Request $request)
     {
@@ -152,39 +149,38 @@ class DocumentController extends Controller
     }
 
     public function searchAll(Request $request)
-{
-    $query = $request->input('q');
+    {
+        $query = $request->input('q');
 
-    $documents = Document::where('content', 'LIKE', '%' . $query . '%')->get();
+        $documents = Document::where('content', 'LIKE', '%' . $query . '%')->get();
 
-    return view('documents.search_results', compact('documents', 'query'));
-}
+        return view('documents.search_results', compact('documents', 'query'));
+    }
 
-public function stats()
-{
-     $start = microtime(true);
+    public function stats()
+    {
+        $start = microtime(true);
 
         $documents = Document::all();
         $documentCount = $documents->count();
 
 
         $totalSize = Document::sum('size');;
-//         
+        //
         // محاكاة وقت الفرز والتصنيف (كمثال فقط)
         usleep(50000); // 50ms فرز
         usleep(80000); // 80ms تصنيف
 
         $end = microtime(true);
         $executionTime = round(($end - $start) * 1000, 2); // بالمللي ثانية
-  $documentsPerCategory = Document::selectRaw('category, COUNT(*) as count')
-        ->groupBy('category')
-        ->pluck('count', 'category');
+        $documentsPerCategory = Document::selectRaw('category, COUNT(*) as count')
+            ->groupBy('category')
+            ->pluck('count', 'category');
         return view('documents.stats', [
             'documentCount' => $documentCount,
             'totalSize' => $totalSize,
             'executionTime' => $executionTime,
-            'documentsPerCategory'=>$documentsPerCategory
+            'documentsPerCategory' => $documentsPerCategory
         ]);
     }
-
 }
