@@ -45,6 +45,13 @@
 </div>
 </form>
 
+<h1>أو أدخل رابط ملف من الإنترنت</h1>
+<form action="{{ route('upload.download') }}" method="POST">
+    @csrf
+    <input type="url" name="url" class="form-control my-2" placeholder="https://example.com/file.pdf" required>
+    <button type="submit" class="btn btn-success">تحميل الملف</button>
+</form>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const fileInput = document.getElementById('fileInput');

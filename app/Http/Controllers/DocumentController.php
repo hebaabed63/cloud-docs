@@ -92,6 +92,38 @@ class DocumentController extends Controller
     }
 
 
+public function downloadFromUrl(Request $request)
+{
+    $request->validate([
+        'url' => 'required|url',
+    ]);
+
+    $fileUrl = $request->input('url');
+    $fileContents = @file_get_contents($fileUrl);
+
+    if (!$fileContents) {
+        return back()->withErrors(['url' => 'فشل تحميل الملف من الرابط']);
+    }
+
+    $tempPath = storage_path('app/temp_' . uniqid() . '.tmp');
+    file_put_contents($tempPath, $fileContents);
+
+    $upload = Cloudinary::upload($tempPath, [
+        'folder' => 'documents',
+        'resource_type' => 'auto',
+    ]);
+
+    unlink($tempPath);
+
+    return back()->with('success', 'تم تحميل الملف من الإنترنت ورفعه: ' . $upload->getSecurePath());
+}
+
+
+
+
+
+
+
     public function show($id)
     {
         $document = Document::findOrFail($id);
