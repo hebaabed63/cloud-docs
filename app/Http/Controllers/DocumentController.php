@@ -8,9 +8,12 @@ use Illuminate\Support\Facades\Storage;
 use Smalot\PdfParser\Parser as PdfParser;
 use PhpOffice\PhpWord\IOFactory;
 use App\Models\Document;
+use Cloudinary\Api\Admin\AdminApi;
+use Cloudinary\Api\Exception\ApiError;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpWord\Element\Text;
+
 use DOMDocument;
 
 class DocumentController extends Controller
@@ -75,6 +78,8 @@ class DocumentController extends Controller
         $document->file_path = $path;
         $document->content = $content ?? '';
         $document->category = null;
+        $document->public_id = $uploaded->getPublicId();
+
 
 
         $this->autoClassify($document);
@@ -158,14 +163,22 @@ public function stats()
         $documents = Document::all();
         $documentCount = $documents->count();
 
-        $totalSize = 0;
-        foreach ($documents as $doc) {
-            $filePath = storage_path("app/documents/" . $doc->filename);
-            if (file_exists($filePath)) {
-                $totalSize += filesize($filePath);
-            }
-        }
 
+        $totalSize = 0;
+        $adminApi = new AdminApi();
+
+foreach ($documents as $doc) {
+    if ($doc->public_id) {
+        try {
+            $resource = $adminApi->asset($doc->public_id, ['resource_type' => 'auto']);
+            if (isset($resource['bytes'])) {
+                $totalSize += $resource['bytes'];
+            }
+        } catch (ApiError $e) {
+            continue; // ممكن تسجلي الخطأ لو بدك
+        }
+    }
+}
         // محاكاة وقت الفرز والتصنيف (كمثال فقط)
         usleep(50000); // 50ms فرز
         usleep(80000); // 80ms تصنيف

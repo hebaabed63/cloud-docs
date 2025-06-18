@@ -27,14 +27,7 @@ Route::get('/documents/{id}/highlight', [DocumentController::class, 'highlight']
 
 Route::get('/documents/stats', [DocumentController::class, 'stats'])->name('documents.stats');
 Route::get('/documents/{id}', [DocumentController::class, 'show'])->name('documents.show');
-Route::get('/check-cloudinary', function () {
-    try {
-        $upload = Cloudinary::upload(public_path('AYA IBRAHIM ABED CV.pdf'), [
-            'resource_type' => 'auto',
-        ]);
-        return $upload->getSecurePath();
-    } catch (\Exception $e) {
-        return $e->getMessage(); // لمعرفة الخطأ بالضبط
-    }
-});
+
+
+
 
