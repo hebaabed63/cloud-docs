@@ -29,7 +29,7 @@ Route::get('/documents/stats', [DocumentController::class, 'stats'])->name('docu
 Route::get('/documents/{id}', [DocumentController::class, 'show'])->name('documents.show');
 Route::get('/check-cloudinary', function () {
     try {
-        $upload = Cloudinary::upload(public_path('test.pdf'), [
+        $upload = Cloudinary::upload(public_path('AYA IBRAHIM ABED CV.pdf'), [
             'resource_type' => 'auto',
         ]);
         return $upload->getSecurePath();
