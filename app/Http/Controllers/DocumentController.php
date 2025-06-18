@@ -42,6 +42,9 @@ class DocumentController extends Controller
     ]);
 
              $path = $uploaded->getSecurePath();
+             $uploadResult = $uploaded->getResult();
+            $size = $uploadResult['bytes'] ?? null;
+
 
         $title = '';
         $content = '';
@@ -76,9 +79,10 @@ class DocumentController extends Controller
         $document->filename=$uploaded->getOriginalFilename();
         $document->title = $title ?? 'No Title';
         $document->file_path = $path;
+        $document->size = $size;
+        $document->public_id = $uploaded->getPublicId();
         $document->content = $content ?? '';
         $document->category = null;
-        $document->public_id = $uploaded->getPublicId();
 
 
 
@@ -164,21 +168,8 @@ public function stats()
         $documentCount = $documents->count();
 
 
-        $totalSize = 0;
-        $adminApi = new AdminApi();
-
-foreach ($documents as $doc) {
-    if ($doc->public_id) {
-        try {
-            $resource = $adminApi->asset($doc->public_id, ['resource_type' => 'auto']);
-            if (isset($resource['bytes'])) {
-                $totalSize += $resource['bytes'];
-            }
-        } catch (ApiError $e) {
-            continue; // ممكن تسجلي الخطأ لو بدك
-        }
-    }
-}
+        $totalSize = Document::sum('size');;
+//         
         // محاكاة وقت الفرز والتصنيف (كمثال فقط)
         usleep(50000); // 50ms فرز
         usleep(80000); // 80ms تصنيف
