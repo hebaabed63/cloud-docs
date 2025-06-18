@@ -43,11 +43,8 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
-        
-        'cloudinary' => [
-            'driver' => 'cloudinary',
-            'cloud_url' => env('CLOUDINARY_URL'),
-        ],
+
+
 
         's3' => [
             'driver' => 's3',
