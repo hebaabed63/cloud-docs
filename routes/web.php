@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DocumentController;
-
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,5 +27,14 @@ Route::get('/documents/{id}/highlight', [DocumentController::class, 'highlight']
 
 Route::get('/documents/stats', [DocumentController::class, 'stats'])->name('documents.stats');
 Route::get('/documents/{id}', [DocumentController::class, 'show'])->name('documents.show');
-
+Route::get('/check-cloudinary', function () {
+    try {
+        $upload = Cloudinary::upload(public_path('test.pdf'), [
+            'resource_type' => 'auto',
+        ]);
+        return $upload->getSecurePath();
+    } catch (\Exception $e) {
+        return $e->getMessage(); // لمعرفة الخطأ بالضبط
+    }
+});
 
