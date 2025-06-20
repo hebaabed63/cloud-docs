@@ -32,7 +32,8 @@ class DocumentController extends Controller
         $request->validate([
             'file' => 'required|file|mimes:pdf,doc,docx',
         ]);
-
+    //  بداية الوقت
+    $startTime = microtime(true);
 
         $file = $request->file('file');
 
@@ -88,9 +89,15 @@ class DocumentController extends Controller
         $this->autoClassify($document);
 
 
-        return redirect()->back()->with('success', 'Document uploaded and processed successfully!');
-    }
-  
+// 🕒 نهاية الوقت
+    $endTime = microtime(true);
+    $duration = round($endTime - $startTime, 4); // الوقت بالثواني (دقة 4 منازل عشرية)
+
+    return redirect()->back()->with([
+        'success' => 'Document uploaded and processed successfully!',
+        'duration' => "Processing Time: {$duration} seconds"
+    ]);    }
+
 
 
 

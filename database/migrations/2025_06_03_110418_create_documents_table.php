@@ -17,9 +17,10 @@ return new class extends Migration
             $table->text('content');
             $table->string('file_path');
             $table->string('category')->nullable();
+            
             $table->softDeletes();
             $table->timestamps();
-              
+
 
 
         });
