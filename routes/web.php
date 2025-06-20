@@ -27,7 +27,6 @@ Route::get('/documents/{id}/highlight', [DocumentController::class, 'highlight']
 
 Route::get('/documents/stats', [DocumentController::class, 'stats'])->name('documents.stats');
 Route::get('/documents/{id}', [DocumentController::class, 'show'])->name('documents.show');
-Route::post('/upload/url', [DocumentController::class, 'uploadFromUrl'])->name('upload.fromUrl');
 
 
 
