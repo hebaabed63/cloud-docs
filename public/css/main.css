@@ -706,3 +706,143 @@ body {
     overflow-x: auto;
   }
 
+
+
+  
+  /* ملف documents.css */
+
+/* تصميم الصندوق العام */
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* عنوان الصفحة */
+h1.section-title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50;
+  font-weight: 700;
+}
+
+/* تصميم صندوق البحث */
+.search-box {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.search-box input[type="text"] {
+  flex-grow: 1;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 2px solid #3498db;
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-box input[type="text"]:focus {
+  border-color: #2980b9;
+}
+
+.search-box button {
+  background-color: #3498db;
+  border: 2px solid #3498db;
+  color: white;
+  padding: 10px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 0 6px 6px 0;
+  transition: background-color 0.3s ease;
+}
+
+.search-box button:hover {
+  background-color: #2980b9;
+}
+
+/* تصميم الجدول */
+table.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 15px;
+}
+
+table.table thead tr {
+  background-color: #2980b9;
+  color: white;
+  font-weight: 600;
+}
+
+table.table th,
+table.table td {
+  padding: 12px 10px;
+  border: 1px solid #ddd;
+}
+
+table.table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table.table tbody tr:hover {
+  background-color: #eaf4fc;
+}
+
+/* محاذاة العنوان لليسار */
+table.table tbody td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: #34495e;
+}
+
+/* تصميم زر العرض */
+.btn-info {
+  background-color: #3498db;
+  border: none;
+  color: white;
+  padding: 6px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-info:hover {
+  background-color: #2980b9;
+}
+
+/* زر الترتيب */
+.btn-sort {
+  background-color: #2ecc71;
+  border: none;
+  color: white;
+  padding: 8px 18px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.btn-sort:hover {
+  background-color: #27ae60;
+}
+
+/* صندوق تحكم الترتيب */
+.sort-container {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+

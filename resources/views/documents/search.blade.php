@@ -35,12 +35,12 @@
             @endforeach
         </tbody>
     </table>
-    <div>
-      <a href="{{ route('documents.search', ['sort' => $sortOrder === 'asc' ? 'desc' : 'asc']) }}" class="btn btn-sm btn-primary mb-3">
+    <div class="sort-container">
+    <a href="{{ route('documents.search', ['sort' => $sortOrder === 'asc' ? 'desc' : 'asc']) }}" class="btn-sort">
         ترتيب {{ $sortOrder === 'asc' ? 'تنازلي' : 'تصاعدي' }}
     </a>
-    </div>
-    
+</div>
+
     </div>
 
 
