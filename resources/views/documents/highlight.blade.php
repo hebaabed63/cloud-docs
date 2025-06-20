@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+ @if (session('duration'))
+        <div class="alert alert-info">
+            🕒{{ session('duration') }}
+        </div>
+    @endif
 <div class="container">
     <h3>{{ $document->title }}</h3>
 

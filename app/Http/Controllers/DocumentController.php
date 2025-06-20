@@ -89,7 +89,7 @@ class DocumentController extends Controller
         $this->autoClassify($document);
 
 
-// 🕒 نهاية الوقت
+//  نهاية الوقت
     $endTime = microtime(true);
     $duration = round($endTime - $startTime, 4); // الوقت بالثواني (دقة 4 منازل عشرية)
 
@@ -125,19 +125,25 @@ class DocumentController extends Controller
         return view('documents.search', compact('documents', 'sortOrder'));
     }
     public function highlight($id, Request $request)
-    {
-        $query = $request->input('q');
-        $document = Document::findOrFail($id);
+{
+    $start = microtime(true);
 
-        $highlightedContent = $document->content;
+    $query = $request->input('q');
+    $document = Document::findOrFail($id);
 
-        if ($query) {
-            $escapedQuery = preg_quote($query, '/');
-            $highlightedContent = preg_replace("/($escapedQuery)/i", '<mark>$1</mark>', $highlightedContent);
-        }
+    $highlightedContent = $document->content;
 
-        return view('documents.highlight', compact('document', 'highlightedContent', 'query'));
+    if ($query) {
+        $escapedQuery = preg_quote($query, '/');
+        $highlightedContent = preg_replace("/($escapedQuery)/i", '<mark>$1</mark>', $highlightedContent);
     }
+
+    $end = microtime(true);
+    $duration = round($end - $start, 4);
+
+    return view('documents.highlight', compact('document', 'highlightedContent', 'query'))
+           ->with('duration', "Highlighting Time: {$duration} seconds");
+}
     public function autoClassify(Document $document)
     {
         $categories = Category::all();
@@ -158,13 +164,18 @@ class DocumentController extends Controller
     }
 
     public function searchAll(Request $request)
-    {
-        $query = $request->input('q');
+{
+    $start = microtime(true);
 
-        $documents = Document::where('content', 'LIKE', '%' . $query . '%')->get();
+    $query = $request->input('q');
+    $documents = Document::where('content', 'LIKE', '%' . $query . '%')->get();
 
-        return view('documents.search_results', compact('documents', 'query'));
-    }
+    $end = microtime(true);
+    $duration = round($end - $start, 4);
+
+    return view('documents.search_results', compact('documents', 'query'))
+           ->with('duration', "Search Time: {$duration} seconds");
+}
 
     public function stats()
     {

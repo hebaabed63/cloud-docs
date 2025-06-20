@@ -8,7 +8,7 @@
     @endif
     @if (session('duration'))
         <div class="alert alert-info">
-            {{ session('duration') }}
+            🕒{{ session('duration') }}
         </div>
     @endif
 
