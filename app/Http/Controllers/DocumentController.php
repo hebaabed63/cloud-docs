@@ -92,6 +92,7 @@ class DocumentController extends Controller
 //  نهاية الوقت
     $endTime = microtime(true);
     $duration = round($endTime - $startTime, 4); // الوقت بالثواني (دقة 4 منازل عشرية)
+        session()->put('time_upload', $duration);
 
     return redirect()->back()->with([
         'success' => 'Document uploaded and processed successfully!',
@@ -140,30 +141,43 @@ class DocumentController extends Controller
 
     $end = microtime(true);
     $duration = round($end - $start, 4);
+session()->put('time_highlight', $duration);
 
     return view('documents.highlight', compact('document', 'highlightedContent', 'query'))
            ->with('duration', "Highlighting Time: {$duration} seconds");
 }
-    public function autoClassify(Document $document)
-    {
-        $categories = Category::all();
+   public function autoClassify(Document $document)
+{
+    $start = microtime(true);
 
-        foreach ($categories as $category) {
-            foreach (json_decode($category->keywords) as $keyword) {
-                if (stripos($document->content, $keyword) !== false) {
-                    $document->category = $category->name;
-                    $document->save();
-                    return $category->name;
-                }
+    $categories = Category::all();
+
+    foreach ($categories as $category) {
+        foreach (json_decode($category->keywords) as $keyword) {
+            if (stripos($document->content, $keyword) !== false) {
+                $document->category = $category->name;
+                $document->save();
+
+                $end = microtime(true);
+                $duration = round($end - $start, 4);
+                 session()->put('time_classify', $duration);
+
+                return $category->name;
             }
         }
-
-        $document->category = 'غير مصنف';
-        $document->save();
-        return 'غير مصنف';
     }
 
-    public function searchAll(Request $request)
+    $document->category = 'غير مصنف';
+    $document->save();
+
+    $end = microtime(true);
+    $duration = round($end - $start, 4);
+session()->put('time_classify', $duration);
+
+    return 'غير مصنف';
+}
+
+public function searchAll(Request $request)
 {
     $start = microtime(true);
 
@@ -172,6 +186,7 @@ class DocumentController extends Controller
 
     $end = microtime(true);
     $duration = round($end - $start, 4);
+      session()->put('time_search', $duration);
 
     return view('documents.search_results', compact('documents', 'query'))
            ->with('duration', "Search Time: {$duration} seconds");
@@ -179,6 +194,13 @@ class DocumentController extends Controller
 
     public function stats()
     {
+        // 🕒 استرجاع أزمنة العمليات
+    $uploadTime = session('time_upload', 0);
+    $searchTime = session('time_search', 0);
+    $highlightTime = session('time_highlight', 0);
+    $classifyTime = session('time_classify', 0);
+
+    $totalProcessTime = $uploadTime + $searchTime + $highlightTime + $classifyTime;
         $start = microtime(true);
 
         $documents = Document::all();
@@ -192,7 +214,7 @@ class DocumentController extends Controller
         usleep(80000); // 80ms تصنيف
 
         $end = microtime(true);
-        $executionTime = round(($end - $start) * 1000, 2); // بالمللي ثانية
+        $executionTime = round(($end - $start) * 1000, 2)+$totalProcessTime; // بالمللي ثانية
         $documentsPerCategory = Document::selectRaw('category, COUNT(*) as count')
             ->groupBy('category')
             ->pluck('count', 'category');
