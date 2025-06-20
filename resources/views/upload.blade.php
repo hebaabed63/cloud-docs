@@ -44,6 +44,12 @@
     </div>
 </div>
 </form>
+<form action="{{ route('upload.fromUrl') }}" method="POST" class="mt-4">
+    @csrf
+    <label for="url">أو أدخل رابط المستند:</label>
+    <input type="url" name="url" id="url" class="form-control" placeholder="https://example.com/file.pdf" required>
+    <button type="submit" class="btn btn-secondary mt-2">رفع من رابط</button>
+</form>
 
 
 
