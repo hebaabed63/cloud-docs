@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+@if (isset($duration))
+    <div class="alert alert-info">
+        🕒{{ $duration }}
+    </div>
+@endif
 
 <div class="container">
     <h3>{{ $document->title }}</h3>
@@ -15,9 +20,6 @@
 
     <a href="{{ route('documents.search', ['q' => $query]) }}" class="btn btn-secondary mt-3">🔙 رجوع للنتائج</a>
 </div>
-@if (session('duration'))
-        <div class="alert alert-info">
-            🕒{{ session('duration') }}
-        </div>
-    @endif
+
+
 @endsection

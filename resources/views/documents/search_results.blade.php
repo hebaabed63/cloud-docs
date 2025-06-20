@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-@if (session('duration'))
+@if (isset($duration))
     <div class="alert alert-info">
-       🕒 {{ session('duration') }}
+        🕒{{ $duration }}
     </div>
 @endif
 
